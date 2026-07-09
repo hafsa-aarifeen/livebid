@@ -117,3 +117,4 @@ D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\obj\Debug\net10.0\r
 D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\obj\Debug\net10.0\LiveBid.Api.pdb
 D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\obj\Debug\net10.0\LiveBid.Api.genruntimeconfig.cache
 D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\obj\Debug\net10.0\ref\LiveBid.Api.dll
+D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\obj\Debug\net10.0\LiveBid.Api.sourcelink.json
