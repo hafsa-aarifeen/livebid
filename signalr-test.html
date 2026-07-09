@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>LiveBid SignalR Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@8.0.0/dist/browser/signalr.min.js"></script>
+    <style>
+      body {
+        font-family: monospace;
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 2rem;
+      }
+      .event {
+        padding: 0.5rem;
+        margin: 0.25rem 0;
+        background: #2d2d2d;
+        border-left: 3px solid #4ec9b0;
+      }
+      #status {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>LiveBid — live bid feed</h2>
+    <div>Connection: <span id="status">connecting…</span></div>
+    <div id="events"></div>
+
+    <script>
+      const auctionId = "f2061b96-22c6-4b01-a936-a1a9be2b7da8"; // keyboard auction
+
+      const connection = new signalR.HubConnectionBuilder()
+        .withUrl("http://localhost:5150/hubs/auction")
+        .withAutomaticReconnect()
+        .build();
+
+      connection.on("BidPlaced", (evt) => {
+        const div = document.createElement("div");
+        div.className = "event";
+        div.textContent =
+          `💰 ${evt.bidder} bid ${evt.amount.toFixed(2)} — ` +
+          `price now ${evt.newCurrentPrice.toFixed(2)} (${evt.bidCount} bids) ` +
+          `at ${new Date(evt.placedAt).toLocaleTimeString()}`;
+        document.getElementById("events").prepend(div);
+      });
+
+      connection
+        .start()
+        .then(() => connection.invoke("JoinAuction", auctionId))
+        .then(
+          () =>
+            (document.getElementById("status").textContent =
+              "✅ connected & joined auction group"),
+        )
+        .catch(
+          (err) =>
+            (document.getElementById("status").textContent = "❌ " + err),
+        );
+    </script>
+  </body>
+</html>

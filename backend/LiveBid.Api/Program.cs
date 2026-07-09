@@ -10,7 +10,21 @@ builder.Services.AddDbContext<LiveBidDbContext>(options =>
 
 builder.Services.AddSignalR();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+        policy.WithOrigins(
+                "http://localhost:4200",   // Angular dev server (later)
+                "http://localhost:5500",   // test page (Live Server / file preview)
+                "http://127.0.0.1:5500")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials());       // required for SignalR
+});
+
 var app = builder.Build();
+
+app.UseCors("Frontend");
 
 // Seed on startup (development convenience)
 using (var scope = app.Services.CreateScope())
