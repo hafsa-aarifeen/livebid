@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LiveBid.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+848f21dba4f1867ec5c4181f5b4e9624c83a80f3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cfad349951fa2fd71740ee61cab7e5d4e466b797")]
 [assembly: System.Reflection.AssemblyProductAttribute("LiveBid.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LiveBid.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

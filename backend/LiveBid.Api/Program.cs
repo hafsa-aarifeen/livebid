@@ -1,6 +1,7 @@
 using LiveBid.Api.Data;
 using LiveBid.Api.Endpoints;
 using LiveBid.Api.Hubs;
+using LiveBid.Api.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,8 @@ builder.Services.AddDbContext<LiveBidDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("LiveBid")));
 
 builder.Services.AddSignalR();
+
+builder.Services.AddHostedService<AuctionLifecycleService>();
 
 builder.Services.AddCors(options =>
 {

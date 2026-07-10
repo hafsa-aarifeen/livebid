@@ -41,3 +41,15 @@ export interface PlaceBidRequest {
   amount: number;
   bidderId: string;
 }
+
+export interface AuctionStartedEvent {
+  auctionId: string;
+  endsAt: string;
+}
+
+export interface AuctionEndedEvent {
+  auctionId: string;
+  finalPrice: number;
+  winner: string | null;
+  winningBidId: string | null;
+}

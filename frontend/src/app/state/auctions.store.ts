@@ -5,7 +5,13 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { firstValueFrom, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { AuctionApiService } from '../core/services/auction-api.service';
-import { AuctionDetail, AuctionSummary, BidPlacedEvent } from '../core/models/auction.models';
+import {
+  AuctionDetail,
+  AuctionEndedEvent,
+  AuctionStartedEvent,
+  AuctionSummary,
+  BidPlacedEvent,
+} from '../core/models/auction.models';
 
 export interface AuctionsState {
   auctions: AuctionSummary[];
@@ -74,8 +80,40 @@ export const AuctionsStore = signalStore(
       });
     }
 
+    function applyAuctionStarted(evt: AuctionStartedEvent): void {
+      patchState(store, {
+        auctions: store.auctions().map((a) =>
+          a.id === evt.auctionId ? { ...a, status: 'Live' as const } : a
+        ),
+      });
+
+      const selected = store.selectedAuction();
+      if (selected?.id === evt.auctionId) {
+        patchState(store, {
+          selectedAuction: { ...selected, status: 'Live' },
+        });
+      }
+    }
+
+    function applyAuctionEnded(evt: AuctionEndedEvent): void {
+      patchState(store, {
+        auctions: store.auctions().map((a) =>
+          a.id === evt.auctionId ? { ...a, status: 'Ended' as const } : a
+        ),
+      });
+
+      const selected = store.selectedAuction();
+      if (selected?.id === evt.auctionId) {
+        patchState(store, {
+          selectedAuction: { ...selected, status: 'Ended' },
+        });
+      }
+    }
+
     return {
       applyBidPlaced,
+      applyAuctionStarted,
+      applyAuctionEnded,
 
       loadAuctions: rxMethod<void>(
         pipe(

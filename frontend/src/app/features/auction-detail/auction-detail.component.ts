@@ -4,13 +4,14 @@ import { RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuctionsStore } from '../../state/auctions.store';
 import { AuctionRealtimeService } from '../../core/services/auction-realtime.service';
+import { CountdownComponent } from './countdown.component';
 
 // TODO: replace with authenticated user once JWT auth lands (bob for now)
 const DEMO_BIDDER_ID = '6669416a-32c8-4964-9576-d8b80b17d918';
 
 @Component({
   selector: 'app-auction-detail',
-  imports: [CurrencyPipe, DatePipe, RouterLink, ReactiveFormsModule],
+  imports: [CurrencyPipe, DatePipe, RouterLink, ReactiveFormsModule, CountdownComponent],
   template: `
     <a routerLink="/auctions" class="back">← All auctions</a>
 
@@ -27,7 +28,14 @@ const DEMO_BIDDER_ID = '6669416a-32c8-4964-9576-d8b80b17d918';
       <div class="price-panel">
         <span class="label">Current price</span>
         <span class="price">{{ auction.currentPrice | currency: 'USD' }}</span>
-        <span class="min">next bid ≥ {{ minimumBid() | currency: 'USD' }}</span>
+        @if (auction.status === 'Live') {
+          <span class="min">
+            <app-countdown [endsAt]="auction.endsAt" /> ·
+            next bid ≥ {{ minimumBid() | currency: 'USD' }}
+          </span>
+        } @else {
+          <span class="min">{{ auction.status }}</span>
+        }
       </div>
 
       @if (auction.status === 'Live') {

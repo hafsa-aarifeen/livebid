@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
 import { AuctionsStore } from '../../state/auctions.store';
-import { BidPlacedEvent } from '../models/auction.models';
+import { AuctionEndedEvent, AuctionStartedEvent, BidPlacedEvent } from '../models/auction.models';
 
 export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'reconnecting';
 
@@ -27,6 +27,14 @@ export class AuctionRealtimeService {
     // Route incoming events into the store — the ONLY place SignalR touches state
     this.connection.on('BidPlaced', (evt: BidPlacedEvent) => {
       this.store.applyBidPlaced(evt);
+    });
+
+    this.connection.on('AuctionStarted', (evt: AuctionStartedEvent) => {
+      this.store.applyAuctionStarted(evt);
+    });
+
+    this.connection.on('AuctionEnded', (evt: AuctionEndedEvent) => {
+      this.store.applyAuctionEnded(evt);
     });
 
     this.connection.onreconnecting(() => this._status.set('reconnecting'));

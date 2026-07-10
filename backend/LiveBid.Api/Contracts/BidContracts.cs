@@ -10,3 +10,11 @@ public record BidPlacedEvent(
     DateTime PlacedAt,
     decimal NewCurrentPrice,
     int BidCount);
+
+public record AuctionStartedEvent(Guid AuctionId, DateTime EndsAt);
+
+public record AuctionEndedEvent(
+    Guid AuctionId,
+    decimal FinalPrice,
+    string? Winner,
+    Guid? WinningBidId);
