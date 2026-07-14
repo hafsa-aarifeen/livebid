@@ -7,19 +7,29 @@ public static class SeedData
 {
     public static async Task EnsureSeededAsync(LiveBidDbContext db)
     {
-        if (await db.Users.AnyAsync()) return;
+        if (await db.Users.AnyAsync())
+        {
+            // Backfill: give pre-auth seed users a real password
+            var placeholders = await db.Users
+                .Where(u => u.PasswordHash == "placeholder")
+                .ToListAsync();
+            foreach (var u in placeholders)
+                u.PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123");
+            if (placeholders.Count > 0) await db.SaveChangesAsync();
+            return;
+        }
 
         var alice = new User
         {
             Username = "alice",
             Email = "alice@example.com",
-            PasswordHash = "placeholder" // replaced when real auth lands
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123")
         };
         var bob = new User
         {
             Username = "bob",
             Email = "bob@example.com",
-            PasswordHash = "placeholder"
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123")
         };
 
         var now = DateTime.UtcNow;

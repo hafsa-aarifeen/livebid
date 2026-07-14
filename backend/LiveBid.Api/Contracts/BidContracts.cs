@@ -1,6 +1,7 @@
-namespace LiveBid.Api.Contracts;
+using System.Security.Claims;
+using Microsoft.IdentityModel.JsonWebTokens;
 
-public record PlaceBidRequest(decimal Amount, Guid BidderId);
+namespace LiveBid.Api.Contracts;
 
 public record BidPlacedEvent(
     Guid BidId,
@@ -18,3 +19,5 @@ public record AuctionEndedEvent(
     decimal FinalPrice,
     string? Winner,
     Guid? WinningBidId);
+
+public record PlaceBidRequest(decimal Amount);

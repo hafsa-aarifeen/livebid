@@ -1,9 +1,11 @@
+using System.Security.Claims;
 using LiveBid.Api.Contracts;
 using LiveBid.Api.Data;
 using LiveBid.Api.Hubs;
 using LiveBid.Api.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace LiveBid.Api.Endpoints;
 
@@ -16,9 +18,17 @@ public static class BidEndpoints
         app.MapPost("/api/auctions/{id:guid}/bids",
             async (Guid id,
                    PlaceBidRequest request,
+                   ClaimsPrincipal principal,
                    LiveBidDbContext db,
                    IHubContext<AuctionHub> hub) =>
         {
+            var bidderIdRaw =
+                principal.FindFirstValue(JwtRegisteredClaimNames.Sub)
+                ?? principal.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!Guid.TryParse(bidderIdRaw, out var bidderId))
+                return Results.Unauthorized();
+
             for (var attempt = 1; attempt <= MaxRetries; attempt++)
             {
                 // Fresh load each attempt — tracked, because we intend to update
@@ -47,7 +57,7 @@ public static class BidEndpoints
 
                 var bidder = await db.Users
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(u => u.Id == request.BidderId);
+                    .FirstOrDefaultAsync(u => u.Id == bidderId);
 
                 if (bidder is null)
                     return Results.BadRequest(new { error = "Unknown bidder." });
@@ -105,6 +115,6 @@ public static class BidEndpoints
             }
 
             return Results.Conflict(new { error = "Unable to place bid." });
-        });
+        }).RequireAuthorization();
     }
 }

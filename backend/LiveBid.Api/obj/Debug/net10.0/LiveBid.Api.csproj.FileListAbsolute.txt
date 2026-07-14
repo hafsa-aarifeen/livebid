@@ -118,3 +118,12 @@ D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\obj\Debug\net10.0\L
 D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\obj\Debug\net10.0\LiveBid.Api.genruntimeconfig.cache
 D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\obj\Debug\net10.0\ref\LiveBid.Api.dll
 D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\obj\Debug\net10.0\LiveBid.Api.sourcelink.json
+D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\bin\Debug\net10.0\BCrypt-Net-Next.dll
+D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+D:\ACER\Downloads\React Projects\livebid\backend\LiveBid.Api\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
