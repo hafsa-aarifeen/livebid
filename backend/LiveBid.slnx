@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="LiveBid.Api.Tests/LiveBid.Api.Tests.csproj" />
+  <Project Path="LiveBid.Api/LiveBid.Api.csproj" />
+</Solution>

@@ -3,6 +3,7 @@ using LiveBid.Api.Contracts;
 using LiveBid.Api.Data;
 using LiveBid.Api.Hubs;
 using LiveBid.Api.Models;
+using LiveBid.Api.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -39,20 +40,14 @@ public static class BidEndpoints
                     return Results.NotFound(new { error = "Auction not found." });
 
                 // --- Validation gauntlet ---
-                var now = DateTime.UtcNow;
+                var validation = BidValidator.Validate(
+                    auction, request.Amount, bidderId, DateTime.UtcNow);
 
-                if (auction.Status != AuctionStatus.Live)
-                    return Results.BadRequest(new { error = "Auction is not live." });
-
-                if (now < auction.StartsAt || now >= auction.EndsAt)
-                    return Results.BadRequest(new { error = "Auction is outside its bidding window." });
-
-                var minimumAcceptable = auction.CurrentPrice + auction.MinIncrement;
-                if (request.Amount < minimumAcceptable)
+                if (!validation.IsValid)
                     return Results.BadRequest(new
                     {
-                        error = $"Bid must be at least {minimumAcceptable:F2}.",
-                        minimumAcceptable
+                        error = validation.Error,
+                        minimumAcceptable = validation.MinimumAcceptable
                     });
 
                 var bidder = await db.Users
@@ -61,9 +56,6 @@ public static class BidEndpoints
 
                 if (bidder is null)
                     return Results.BadRequest(new { error = "Unknown bidder." });
-
-                if (auction.SellerId == bidder.Id)
-                    return Results.BadRequest(new { error = "Sellers cannot bid on their own auctions." });
 
                 // --- Apply the bid ---
                 var bid = new Bid
