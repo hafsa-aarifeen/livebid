@@ -39,7 +39,6 @@ export interface BidPlacedEvent {
 
 export interface PlaceBidRequest {
   amount: number;
-  bidderId: string;
 }
 
 export interface AuctionStartedEvent {

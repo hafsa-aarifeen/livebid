@@ -3,6 +3,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuctionsStore } from '../../state/auctions.store';
 import { AuctionRealtimeService } from '../../core/services/auction-realtime.service';
+import { AuthStore } from '../../state/auth.store';
 
 @Component({
   selector: 'app-auction-list',
@@ -19,6 +20,15 @@ import { AuctionRealtimeService } from '../../core/services/auction-realtime.ser
     }
 
     <h1>LiveBid</h1>
+
+    <p class="meta">
+      @if (auth.isAuthenticated()) {
+        Signed in as {{ auth.username() }} ·
+        <a href="" (click)="auth.logout(); $event.preventDefault()">sign out</a>
+      } @else {
+        <a routerLink="/login">Sign in</a> to bid
+      }
+    </p>
 
     @if (store.loading()) {
       <p class="muted">Loading auctions…</p>
@@ -137,6 +147,7 @@ import { AuctionRealtimeService } from '../../core/services/auction-realtime.ser
 export class AuctionListComponent implements OnInit {
   readonly store = inject(AuctionsStore);
   readonly realtime = inject(AuctionRealtimeService);
+  readonly auth = inject(AuthStore);
 
   private readonly joinedGroups = new Set<string>();
 

@@ -6,9 +6,6 @@ import { AuctionsStore } from '../../state/auctions.store';
 import { AuctionRealtimeService } from '../../core/services/auction-realtime.service';
 import { CountdownComponent } from './countdown.component';
 
-// TODO: replace with authenticated user once JWT auth lands (bob for now)
-const DEMO_BIDDER_ID = '6669416a-32c8-4964-9576-d8b80b17d918';
-
 @Component({
   selector: 'app-auction-detail',
   imports: [CurrencyPipe, DatePipe, RouterLink, ReactiveFormsModule, CountdownComponent],
@@ -30,8 +27,8 @@ const DEMO_BIDDER_ID = '6669416a-32c8-4964-9576-d8b80b17d918';
         <span class="price">{{ auction.currentPrice | currency: 'USD' }}</span>
         @if (auction.status === 'Live') {
           <span class="min">
-            <app-countdown [endsAt]="auction.endsAt" /> ·
-            next bid ≥ {{ minimumBid() | currency: 'USD' }}
+            <app-countdown [endsAt]="auction.endsAt" /> · next bid ≥
+            {{ minimumBid() | currency: 'USD' }}
           </span>
         } @else {
           <span class="min">{{ auction.status }}</span>
@@ -213,7 +210,7 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
   submitBid(): void {
     const amount = this.bidAmount.value;
     if (amount == null) return;
-    this.store.placeBid(amount, DEMO_BIDDER_ID);
+    this.store.placeBid(amount);
     this.bidAmount.reset();
   }
 }

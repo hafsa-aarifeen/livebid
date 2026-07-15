@@ -1,6 +1,11 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
+  {
+    path: 'login',
+    loadComponent: () => import('./features/login/login.component').then((m) => m.LoginComponent),
+  },
   {
     path: 'auctions',
     loadComponent: () =>
@@ -8,6 +13,7 @@ export const routes: Routes = [
   },
   {
     path: 'auctions/:id',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/auction-detail/auction-detail.component').then(
         (m) => m.AuctionDetailComponent,

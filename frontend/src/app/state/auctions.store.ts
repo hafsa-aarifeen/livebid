@@ -5,6 +5,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { firstValueFrom, pipe, switchMap, tap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
 import { AuctionApiService } from '../core/services/auction-api.service';
+import { AuthStore } from './auth.store';
 import {
   AuctionDetail,
   AuctionEndedEvent,
@@ -42,7 +43,7 @@ export const AuctionsStore = signalStore(
     endedAuctions: computed(() => auctions().filter((a) => a.status === 'Ended')),
   })),
 
-  withMethods((store, api = inject(AuctionApiService)) => {
+  withMethods((store, api = inject(AuctionApiService), auth = inject(AuthStore)) => {
     // Shared by the SignalR pipeline AND the HTTP success path.
     // Idempotent by bidId — safe to call twice with the same event.
     function applyBidPlaced(evt: BidPlacedEvent): void {
@@ -144,7 +145,7 @@ export const AuctionsStore = signalStore(
       ),
 
       // --- Optimistic bid placement ---
-      async placeBid(amount: number, bidderId: string): Promise<void> {
+      async placeBid(amount: number): Promise<void> {
         const selected = store.selectedAuction();
         if (!selected || store.placingBid()) return;
 
@@ -165,7 +166,7 @@ export const AuctionsStore = signalStore(
                 id: tempId,
                 amount,
                 placedAt: new Date().toISOString(),
-                bidder: 'you',
+                bidder: auth.username() ?? 'you',
               },
               ...selected.bids,
             ],
@@ -174,7 +175,7 @@ export const AuctionsStore = signalStore(
 
         try {
           // 2. The real request
-          const evt = await firstValueFrom(api.placeBid(selected.id, { amount, bidderId }));
+          const evt = await firstValueFrom(api.placeBid(selected.id, { amount }));
 
           // 3a. Confirmed — remove the pending row, apply the real event.
           //     (SignalR may have already delivered it; applyBidPlaced dedupes.)
