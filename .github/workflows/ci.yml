@@ -19,13 +19,13 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Restore
-        run: dotnet restore backend/LiveBid.sln
+        run: dotnet restore backend/LiveBid.slnx
 
       - name: Build
-        run: dotnet build backend/LiveBid.sln --no-restore --configuration Release
+        run: dotnet build backend/LiveBid.slnx --no-restore --configuration Release
 
       - name: Test
-        run: dotnet test backend/LiveBid.sln --no-build --configuration Release --verbosity normal
+        run: dotnet test backend/LiveBid.slnx --no-build --configuration Release --verbosity normal
 
   frontend:
     name: Frontend — build
